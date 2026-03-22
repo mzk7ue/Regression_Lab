@@ -370,3 +370,111 @@ plt.show()
 # Weaknesses:
 # We have several one-hot encoded features, which increased the number of predictors significantly. This means that the model might not generalize as well, and that our model could be overfitted.
 # While the residuals are roughly bell-shaped, there may still be outliers or extreme residuals, which is indicated in the tail in the model. This means that the model may struggle with predicting very expensive or very cheap cars.
+
+# %%
+# Question 3
+
+# %% 
+# Question 3.1
+# Source: https://www.kaggle.com/datasets/budincsevity/szeged-weather?resource=download
+weather = pd.read_csv('weatherHistory.csv')
+weather.info()
+
+# %%
+# Question 3.2
+# Check for duplicates + drop
+weather.duplicated().sum()
+weather = weather.drop_duplicates()
+weather.info()
+
+# %%
+# Check for missing values + drop
+weather.isnull().sum()
+weather = weather.dropna()
+weather.info()
+
+# %%
+# Remove the date column
+weather = weather.iloc[:, 1:]
+weather.info()
+
+# %%
+# Check distribution of Y variable 
+plt.hist(weather['Apparent Temperature (C)'])
+
+# %%
+# EDA for Precipitation Type, Humidity, and Visibility 
+plt.hist(weather['Precip Type'])
+
+# %%
+plt.hist(weather['Humidity'])
+
+# %%
+plt.hist(weather['Visibility (km)'])
+
+# %%
+# Identifying the predictors for each model
+numeric_features = weather.select_dtypes(include = ['float64']).columns.tolist()
+
+# For numeric predictors only regression model
+X_num = weather[numeric_features].drop(columns = ['Apparent Temperature (C)'])
+
+categorical_features = weather.select_dtypes(include = ['str']).columns.tolist()
+
+# %%
+# Target variable
+y_w = weather['Apparent Temperature (C)']
+
+#%%
+# Question 3.3 + 3.4
+
+# Regression model with numeric features only
+X_num_train, X_num_test, yw_train, yw_test = train_test_split(X_num, y_w, test_size = 0.2, random_state = 42)
+wModel_num = LinearRegression().fit(X_num_train, yw_train)
+
+yw_pred = wModel_num.predict(X_num_test)
+
+# Mean Squared Error
+mse_weatherN = mean_squared_error(yw_test, yw_pred)
+
+# Root Mean Squared Error
+rmse_weatherN = np.sqrt(mse_weatherN)
+print(f"Root Mean Squared Error: {rmse_weatherN:.2f}")
+
+# R-Squared
+r_squared_weatherN = r2_score(yw_test, yw_pred)
+print(f"R² Score: {r_squared_weatherN:.4f}")
+
+# %%
+# Regression model with categorical features only
+
+# One-hot encode, with drop_first = True to avoid dummy trap
+encoded_w = pd.get_dummies(weather[categorical_features], drop_first = True, prefix = ['S', 'P', 'D'])
+
+X_encoded_train, X_encoded_test, yw2_train, yw2_test = train_test_split(encoded_w, y_w, test_size = 0.2, random_state = 42)
+
+wModel_cat = LinearRegression().fit(X_encoded_train, yw2_train)
+
+yw2_pred = wModel_cat.predict(X_encoded_test)
+
+# Mean Squared Error
+mse_weatherC = mean_squared_error(yw2_test, yw2_pred)
+
+# Root Mean Squared Error
+rmse_weatherC = np.sqrt(mse_weatherC)
+print(f"Root Mean Squared Error: {rmse_weatherC:.2f}")
+
+# R-Squared
+r_squared_weatherC = r2_score(yw2_test, yw2_pred)
+print(f"R² Score: {r_squared_weatherC:.4f}")
+
+# %%
+# Question 3.5
+# The regression model with numeric features only peformed significantly better (r-squared: 0.98) than the categorical only model (r-squared: 0.5).
+# This may be because temperature can often be predicted based on numeric values of contributing factors such as humidity, wind speed, etc. 
+# Additionally, there were much more numeric variables than categorical features. 
+ 
+# %%
+# Question 3.6
+# I learned that linear regression model fit can vary significantly depending on the features you feed it. 
+# It is crucial to remove outliers, and "noise," in order to create the best prediction model.
