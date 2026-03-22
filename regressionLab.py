@@ -501,3 +501,5 @@ print(f"R² Score: {r_squared_weatherC:.4f}")
 # Question 3.6
 # I learned that linear regression model fit can vary significantly depending on the features you feed it. 
 # It is crucial to remove outliers, and "noise," in order to create the best prediction model.
+
+# %%
