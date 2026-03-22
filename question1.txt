@@ -1,0 +1,20 @@
+1. What makes a model "linear"? "Linear" in what?
+A model is linear when its parameters enter the model adding onto the total. Even if the variables or features themselves are transformed (squared, log, etc.) It is linear in its coefficients. 
+
+2. How do you interpret the coefficient for a dummy/one-hot-encoded variable? (This is a trick question, and the trick involves how you handle the intercept of the model.) There's further explanation at the end of this document, if needed.
+- If you drop one dummy variable (drop_first = True), then each coefficient for a one hot encoded variable represents how much higher or lower the response (outcome - y) will be relative to the base category (the variable you dropped and is captured in the intercept). 
+- If you do not drop a dummy variable (drop_first = False), then we run into the dummy variable trap, where the independent variables (our features) are multicollinear, so the coefficients are not uniquely defined and cannot be interpreted properly.
+
+3. Can linear regression be used for classification? Explain why, or why not.
+No, because linear regression predicts values, not probabilities. It also assumes constant variance, which does not hold for classification.
+
+4. If you have a high accuracy on training but low on testing, what might be the problem? It also might be you see a pattern in the residuals.
+You may have overfitted the model, which means the program memorized the training data, but can't generalize to new data. 
+
+5. Review this page: Non-Linear with Linear What are two ways to incorporate nonlinear relationships between your target/response/dependent/outcome variable y and your features/control/response/independent variable x?
+You can incorporate non-linear relationships between feature and target variables by creating polynomial terms or using a kernel, which allows a model to learn nonlinear relationships without explicitly creating new features.
+
+6. What is the interpretation of the intercept? A slope coefficient for a variable? The coefficient for a dummy/one-hot-encoded variable?
+- The intercept is the predicted value of the dependent variable when all other independent variables (besides the base level) are 0. 
+- The slope coefficient tells us how much Y changes for a unit increase in that variable, holding all the other predictors constant.
+- The coefficient for a dummy or one hot encoded variable shows us the difference in the predicted outcome (our response variable) between that variable category and the base category, holding all other variables constant.
