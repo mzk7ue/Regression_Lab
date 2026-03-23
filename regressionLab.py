@@ -370,6 +370,7 @@ plt.show()
 
 # The predicted values and true values roughly line up along the diagonal. 
 
+
 # %%
 # Residual Analysis
 residuals = y_all_test - y_all_pred
